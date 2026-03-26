@@ -1,11 +1,14 @@
 package handler
 
 import (
-	"net/http"
 	"path"
 	"os"
 	"strings"
 	"mime"
+	"crypto/md5"
+	"fmt"
+	"time"
+	"syscall"
 	"github.com/nginxgo/nginxgo/pkg/http"
 )
 
@@ -72,24 +75,38 @@ func (h *StaticHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.SetContentType(mime.TypeByExtension(ext))
 	w.SetContentLength(int(stat.Size()))
 
-	// ETag
+	// ETag - 使用 inode + size + mtime
 	etag := computeETag(stat)
 	w.SetHeader("ETag", etag)
 
 	// Last-Modified
-	w.SetHeader("Last-Modified", stat.ModTime().Format(http.TimeFormat))
+	w.SetHeader("Last-Modified", stat.ModTime().Format(time.RFC1123))
 
 	// 读取并发送文件
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		w.SetStatus(500)
+		w.WriteString("Internal Server Error")
 		return
 	}
 
 	w.Write(data)
 }
 
-// computeETag 计算 ETag
+// computeETag 计算 ETag - 使用文件大小和修改时间
 func computeETag(info os.FileInfo) string {
-	return ""
+	stat := info.Sys()
+	if stat != nil {
+		if fs, ok := stat.(*syscall.Stat_t); ok {
+			return fmt.Sprintf(`"%x-%x"`, fs.Ino, info.ModTime().Unix())
+		}
+	}
+	// 回退: 使用文件大小和mtime的组合
+	return fmt.Sprintf(`"%x-%x"`, info.Size(), info.ModTime().Unix())
+}
+
+// computeETagFromBytes 从内容计算 ETag
+func computeETagFromBytes(data []byte) string {
+	hash := md5.Sum(data)
+	return fmt.Sprintf(`"%x"`, hash)
 }

@@ -18,18 +18,21 @@ type Response struct {
 
 	Request *Request
 	conn    net.Conn
+	writer  *bufio.Writer
 
 	sentHeaders bool
 }
 
 // NewResponse 创建响应
 func NewResponse(req *Request, conn net.Conn) *Response {
+	writer := bufio.NewWriter(conn)
 	return &Response{
 		StatusCode: 200,
 		StatusText: "OK",
 		Headers:    make(map[string]string),
 		Request:    req,
 		conn:       conn,
+		writer:     writer,
 	}
 }
 
@@ -74,7 +77,8 @@ func (r *Response) WriteHeader() error {
 	header.WriteString("\r\n")
 
 	// 发送
-	r.conn.Write([]byte(header.String()))
+	r.writer.WriteString(header.String())
+	r.writer.Flush()
 	r.sentHeaders = true
 
 	return nil
@@ -87,7 +91,7 @@ func (r *Response) Write(b []byte) (int, error) {
 		r.WriteHeader()
 	}
 
-	return r.conn.Write(b)
+	return r.writer.Write(b)
 }
 
 // WriteString 写入字符串
@@ -101,16 +105,17 @@ func (r *Response) End() error {
 		r.SetContentLength(len(r.Body))
 		r.WriteHeader()
 		if len(r.Body) > 0 {
-			r.conn.Write(r.Body)
+			r.writer.Write(r.Body)
 		}
 	}
+	r.writer.Flush()
 	return nil
 }
 
 // Flush 刷新缓冲区
 func (r *Response) Flush() {
-	if writer, ok := r.conn.(*bufio.Writer); ok {
-		writer.Flush()
+	if r.writer != nil {
+		r.writer.Flush()
 	}
 }
 
