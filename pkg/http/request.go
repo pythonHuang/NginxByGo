@@ -1,7 +1,6 @@
 package http
 
 import (
-	"net"
 	"bufio"
 	"strings"
 )

@@ -66,7 +66,7 @@ func (s *Scanner) Next() Token {
 		return s.scanString()
 	case ch == '$':
 		return s.scanVariable()
-	case unicode.IsLetter(ch) || ch == '_':
+	case unicode.IsLetter(rune(ch)) || ch == '_':
 		return s.scanIdent()
 	default:
 		s.advance()
@@ -120,7 +120,7 @@ func (s *Scanner) scanVariable() Token {
 	
 	for s.pos < len(s.input) {
 		ch := s.input[s.pos]
-		if !unicode.IsLetter(ch) && !unicode.IsDigit(ch) && ch != '_' {
+		if !unicode.IsLetter(rune(ch)) && !unicode.IsDigit(rune(ch)) && ch != '_' {
 			break
 		}
 		s.pos++
@@ -133,7 +133,7 @@ func (s *Scanner) scanIdent() Token {
 	start := s.pos
 	for s.pos < len(s.input) {
 		ch := s.input[s.pos]
-		if unicode.IsLetter(ch) || unicode.IsDigit(ch) || ch == '_' || ch == '-' || ch == '.' {
+		if unicode.IsLetter(rune(ch)) || unicode.IsDigit(rune(ch)) || ch == '_' || ch == '-' || ch == '.' {
 			s.pos++
 		} else {
 			break

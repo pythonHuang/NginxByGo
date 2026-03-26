@@ -59,8 +59,6 @@ func main() {
 		syscall.SIGINT, 
 		syscall.SIGQUIT, 
 		syscall.SIGHUP,
-		syscall.SIGUSR1,
-		syscall.SIGUSR2,
 	)
 
 	// 等待信号
@@ -73,8 +71,6 @@ func main() {
 		case syscall.SIGHUP:
 			logger.Info("Reloading configuration...")
 			// TODO: 实现配置重载
-		case syscall.SIGUSR1:
-			logger.Info("Reopening log files...")
 		}
 	}
 }

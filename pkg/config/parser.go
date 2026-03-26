@@ -290,6 +290,9 @@ func (p *Parser) parseUpstreamBlock() (*UpstreamConfig, error) {
 }
 
 func (p *Parser) next() Token {
+	if p.pos >= len(p.tokens) {
+		return Token{Type: TokenEOF}
+	}
 	t := p.tokens[p.pos]
 	p.pos++
 	return t

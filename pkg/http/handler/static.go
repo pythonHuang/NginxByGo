@@ -8,7 +8,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"time"
-	"syscall"
 	"github.com/nginxgo/nginxgo/pkg/http"
 )
 
@@ -95,13 +94,7 @@ func (h *StaticHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // computeETag 计算 ETag - 使用文件大小和修改时间
 func computeETag(info os.FileInfo) string {
-	stat := info.Sys()
-	if stat != nil {
-		if fs, ok := stat.(*syscall.Stat_t); ok {
-			return fmt.Sprintf(`"%x-%x"`, fs.Ino, info.ModTime().Unix())
-		}
-	}
-	// 回退: 使用文件大小和mtime的组合
+	// 使用文件大小和mtime的组合作为ETag
 	return fmt.Sprintf(`"%x-%x"`, info.Size(), info.ModTime().Unix())
 }
 

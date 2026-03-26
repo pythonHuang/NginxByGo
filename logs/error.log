@@ -1,0 +1,4 @@
+2026/03/26 14:23:32 [INFO] Starting NginxGo 0.1.0
+2026/03/26 14:27:13 [INFO] Starting NginxGo 0.1.0
+2026/03/26 14:27:13 [ERROR] Server error: listen tcp 0.0.0.0:80: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+2026/03/26 14:28:19 [INFO] Shutting down...
