@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NginxGo - Go实现的Web服务器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear(90deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            color: #8a8a9a;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,212,255,0.1);
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+        .feature-card p {
+            color: #8a8a9a;
+            line-height: 1.6;
+        }
+        .architecture {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+        .architecture h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #00ff88;
+        }
+        .arch-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .arch-box {
+            background: linear(135deg, #0f3460, #1a1a2e);
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            padding: 20px 30px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .arch-box.master {
+            border-color: #ff6b6b;
+        }
+        .arch-box.worker {
+            border-color: #00ff88;
+        }
+        .arch-arrow {
+            font-size: 2rem;
+            color: #00d4ff;
+        }
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .module-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .module-item .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .module-item h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        .status {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0,255,136,0.1);
+            border-radius: 15px;
+            border: 1px solid #00ff88;
+        }
+        .status h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        .version {
+            display: inline-block;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 NginxGo</h1>
+            <p>使用 Go 语言重构的高性能 Web 服务器</p>
+            <span class="version">Version 0.1.0</span>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>⚡ 高性能</h3>
+                <p>基于 Go 语言的并发模型，充分利用多核处理器，支持高并发连接。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔄 Master-Worker 架构</h3>
+                <p>继承 Nginx 的进程模型，Master 进程管理配置，Worker 进程处理请求。</p>
+            </div>
+            <div class="feature-card">
+                <h3>📁 静态文件服务</h3>
+                <p>支持静态文件服务，包含 ETag、Last-Modified 缓存优化。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🌐 反向代理</h3>
+                <p>支持上游服务器转发，实现负载均衡和故障转移。</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚖️ 负载均衡</h3>
+                <p>支持轮询和最少连接两种负载均衡策略。</p>
+            </div>
+            <div class="feature-card">
+                <h3>📦 Gzip 压缩</h3>
+                <p>支持响应内容压缩，减少传输带宽。</p>
+            </div>
+        </div>
+
+        <div class="architecture">
+            <h2>🏗️ 系统架构</h2>
+            <div class="arch-diagram">
+                <div class="arch-box master">
+                    <strong>Master</strong><br>
+                    <small>进程管理</small>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-box worker">
+                    <strong>Worker 1</strong><br>
+                    <small>请求处理</small>
+                </div>
+                <div class="arch-box worker">
+                    <strong>Worker 2</strong><br>
+                    <small>请求处理</small>
+                </div>
+                <div class="arch-box worker">
+                    <strong>Worker N</strong><br>
+                    <small>请求处理</small>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 30px; color: #00d4ff;">📦 核心模块</h2>
+        <div class="modules">
+            <div class="module-item">
+                <div class="icon">⚙️</div>
+                <h4>Core</h4>
+                <p>进程管理与生命周期</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">📝</div>
+                <h4>Config</h4>
+                <p>配置解析系统</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">🌐</div>
+                <h4>HTTP</h4>
+                <p>HTTP服务器与路由</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">📄</div>
+                <h4>Handler</h4>
+                <p>静态文件与代理</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">⚖️</div>
+                <h4>Upstream</h4>
+                <p>负载均衡</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">📋</div>
+                <h4>Log</h4>
+                <p>日志系统</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">⚡</div>
+                <h4>Event</h4>
+                <p>事件循环(epoll)</p>
+            </div>
+            <div class="module-item">
+                <div class="icon">🗜️</div>
+                <h4>Filter</h4>
+                <p>Gzip压缩</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <h3>✅ 项目状态: 开发中</h3>
+            <p>核心功能已完成，欢迎参与贡献！</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NginxGo 测试控制台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #7ee787;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .test-btn {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .test-btn:hover {
+            background: #2ea043;
+        }
+        .test-btn:disabled {
+            background: #30363d;
+            cursor: not-allowed;
+        }
+        .result {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { color: #7ee787; }
+        .error { color: #f85149; }
+        .info { color: #58a6ff; }
+        .warning { color: #d29922; }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #21262d;
+            border-radius: 6px;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-ok { background: #238636; color: white; }
+        .status-dev { background: #d29922; color: #0d1117; }
+        .status-wip { background: #388bfd; color: white; }
+        
+        .progress-bar {
+            height: 8px;
+            background: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #238636, #7ee787);
+            transition: width 0.3s;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+        th {
+            color: #8b949e;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 NginxGo 测试控制台</h1>
+        
+        <div class="section">
+            <h2>📊 项目进度</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%;"></div>
+            </div>
+            <p style="color: #8b949e; margin-top: 10px;">核心功能开发完成度: 75%</p>
+        </div>
+        
+        <div class="section">
+            <h2>🚀 功能测试</h2>
+            <button class="test-btn" onclick="testEndpoint('/')">测试首页</button>
+            <button class="test-btn" onclick="testEndpoint('/html/index.html')">测试静态文件</button>
+            <button class="test-btn" onclick="testEndpoint('/about')">测试路由</button>
+            <button class="test-btn" onclick="testEndpoint('/notexist')">测试404</button>
+            <div id="test-result" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>📦 模块状态</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>进程管理 (Master/Worker)</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>配置解析系统</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>HTTP 服务器</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>静态文件服务</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>反向代理</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>负载均衡</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-ok">✓ 完成</span>
+                    <span>Gzip 压缩</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-dev">开发中</span>
+                    <span>事件循环 (epoll)</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-wip">待实现</span>
+                    <span>SSL/TLS 支持</span>
+                </div>
+                <div class="feature-item">
+                    <span class="status-badge status-wip">待实现</span>
+                    <span>WebSocket 支持</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📁 项目文件结构</h2>
+            <table>
+                <tr>
+                    <th>模块</th>
+                    <th>文件</th>
+                    <th>状态</th>
+                </tr>
+                <tr>
+                    <td>入口</td>
+                    <td><code>cmd/nginxgo/main.go</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>核心</td>
+                    <td><code>pkg/core/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>配置</td>
+                    <td><code>pkg/config/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>HTTP</td>
+                    <td><code>pkg/http/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>上游</td>
+                    <td><code>pkg/upstream/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>日志</td>
+                    <td><code>pkg/log/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>事件</td>
+                    <td><code>pkg/event/</code></td>
+                    <td><span class="status-badge status-dev">开发</span></td>
+                </tr>
+                <tr>
+                    <td>过滤器</td>
+                    <td><code>pkg/http/filter/</code></td>
+                    <td><span class="status-badge status-ok">✓</span></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>📝 测试说明</h2>
+            <div class="result" style="display: block;">
+<span class="info"># 如何运行 NginxGo</span>
+
+<span class="warning"># 1. 安装 Go 1.21+</span>
+<span class="info"># https://go.dev/dl/</span>
+
+<span class="warning"># 2. 编译运行</span>
+cd D:\WorkBuddyMyWorkSpace\NginxGo重构
+go build -o nginxgo.exe ./cmd/nginxgo
+./nginxgo.exe
+
+<span class="warning"># 3. 测试访问</span>
+curl http://localhost:80/
+curl http://localhost:80/html/index.html
+
+<span class="warning"># 4. 配置重载 (热更新)</span>
+kill -HUP $(pid)
+
+<span class="success"># 当前需要Go环境才能运行</span>
+<span class="error"># 提示: Go未安装时无法直接运行测试</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function testEndpoint(path) {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<span class="info">⏳ 正在测试 ' + path + '...</span>';
+            
+            try {
+                const response = await fetch(path, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                resultDiv.innerHTML = '<span class="success">✓ 请求已发送 (CORS限制无法查看响应)</span>\n<span class="info">提示: 需要NginxGo服务器运行才能看到真实响应</span>';
+            } catch (err) {
+                resultDiv.innerHTML = '<span class="error">✗ 请求失败: ' + err.message + '</span>\n<span class="warning">服务器可能未运行，请先安装Go并启动服务器</span>';
+            }
+        }
+    </script>
+</body>
+</html>

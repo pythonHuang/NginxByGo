@@ -1,0 +1,19 @@
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "message": "NginxGo API 模拟响应",
+  "timestamp": "2026-03-26T13:30:00Z",
+  "endpoints": {
+    "GET /": "返回首页静态文件",
+    "GET /html/*": "返回静态资源",
+    "GET /api/status": "返回服务器状态",
+    "POST /api/*": "API接口占位"
+  },
+  "features": [
+    "静态文件服务",
+    "反向代理",
+    "负载均衡",
+    "Gzip压缩",
+    "配置解析"
+  ]
+}
