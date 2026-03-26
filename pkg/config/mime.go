@@ -1,0 +1,33 @@
+package config
+
+// DefaultMIMETypes 默认 MIME 类型映射
+var DefaultMIMETypes = map[string]string{
+	".html": "text/html",
+	".htm":  "text/html",
+	".shtml": "text/html",
+	".css":  "text/css",
+	".xml":  "text/xml",
+	".gif":  "image/gif",
+	".jpeg": "image/jpeg",
+	".jpg":  "image/jpeg",
+	".js":   "application/javascript",
+	".atom": "application/atom+xml",
+	".rss":  "application/rss+xml",
+	".svg":  "image/svg+xml",
+	".ico":  "image/x-icon",
+	".json": "application/json",
+	".pdf":  "application/pdf",
+	".zip":  "application/zip",
+	".gz":   "application/gzip",
+	".tar":  "application/x-tar",
+	".mp4":  "video/mp4",
+	".webm": "video/webm",
+	".mpeg": "video/mpeg",
+	".mp3":  "audio/mpeg",
+	".wav":  "audio/wav",
+	".ogg":  "audio/ogg",
+	".woff": "font/woff",
+	".woff2": "font/woff2",
+	".ttf":  "font/ttf",
+	".eot":  "application/vnd.ms-fontobject",
+}
