@@ -3,250 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NginxGo - Go实现的Web服务器</title>
+    <title>NginxGo - 部署预览</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e0e0e0;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 30px;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .hero {
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        .header {
             text-align: center;
-            margin-bottom: 60px;
+            padding: 40px 0;
+            border-bottom: 1px solid #333;
         }
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+        .header h1 {
+            font-size: 2.5rem;
             background: linear(90deg, #00d4ff, #00ff88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            font-size: 1.3rem;
-            color: #8a8a9a;
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-        .feature-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,212,255,0.1);
-        }
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #00d4ff;
-        }
-        .feature-card p {
-            color: #8a8a9a;
-            line-height: 1.6;
-        }
-        .architecture {
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 50px;
-        }
-        .architecture h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #00ff88;
-        }
-        .arch-diagram {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .arch-box {
-            background: linear(135deg, #0f3460, #1a1a2e);
-            border: 2px solid #00d4ff;
-            border-radius: 10px;
-            padding: 20px 30px;
-            text-align: center;
-            min-width: 120px;
-        }
-        .arch-box.master {
-            border-color: #ff6b6b;
-        }
-        .arch-box.worker {
-            border-color: #00ff88;
-        }
-        .arch-arrow {
-            font-size: 2rem;
-            color: #00d4ff;
-        }
-        .modules {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-        .module-item {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-        .module-item .icon {
-            font-size: 2rem;
             margin-bottom: 10px;
         }
-        .module-item h4 {
-            color: #00d4ff;
-            margin-bottom: 10px;
-        }
-        .status {
-            text-align: center;
-            padding: 30px;
-            background: rgba(0,255,136,0.1);
-            border-radius: 15px;
-            border: 1px solid #00ff88;
-        }
-        .status h3 {
-            color: #00ff88;
-            margin-bottom: 10px;
-        }
-        .version {
+        .header p { color: #888; }
+        
+        .badge {
             display: inline-block;
-            background: #00d4ff;
-            color: #1a1a2e;
+            background: #238636;
+            color: white;
             padding: 5px 15px;
             border-radius: 20px;
-            font-weight: bold;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            margin-top: 15px;
         }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,212,255,0.1);
+        }
+        .card h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .card p { color: #999; line-height: 1.6; }
+        .card .icon { font-size: 2rem; margin-bottom: 10px; }
+        
+        .progress-section {
+            background: rgba(255,255,255,0.02);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        .progress-section h2 { color: #00ff88; margin-bottom: 20px; }
+        
+        .progress-item {
+            margin: 15px 0;
+        }
+        .progress-item label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            height: 10px;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .fill-done { background: linear-gradient(90deg, #238636, #7ee787); }
+        .fill-dev { background: linear-gradient(90deg, #d29922, #f0c674); }
+        .fill-todo { background: linear-gradient(90deg, #388bfd, #79c0ff); }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tech-item {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+        }
+        
+        .demo-section {
+            background: rgba(0,212,255,0.05);
+            border: 1px solid #00d4ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        .demo-section h2 { color: #00d4ff; margin-bottom: 20px; }
+        
+        .demo-btn {
+            background: #00d4ff;
+            color: #0f0f23;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .demo-btn:hover { background: #00ff88; }
+        
+        .code-block {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        
+        .file-tree {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .file-tree .dir { color: #7ee787; }
+        .file-tree .file { color: #a5d6ff; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="hero">
+        <div class="header">
             <h1>🚀 NginxGo</h1>
             <p>使用 Go 语言重构的高性能 Web 服务器</p>
-            <span class="version">Version 0.1.0</span>
+            <span class="badge">v0.1.0 · 开发中</span>
         </div>
-
-        <div class="features">
-            <div class="feature-card">
-                <h3>⚡ 高性能</h3>
-                <p>基于 Go 语言的并发模型，充分利用多核处理器，支持高并发连接。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🔄 Master-Worker 架构</h3>
-                <p>继承 Nginx 的进程模型，Master 进程管理配置，Worker 进程处理请求。</p>
-            </div>
-            <div class="feature-card">
-                <h3>📁 静态文件服务</h3>
-                <p>支持静态文件服务，包含 ETag、Last-Modified 缓存优化。</p>
-            </div>
-            <div class="feature-card">
-                <h3>🌐 反向代理</h3>
-                <p>支持上游服务器转发，实现负载均衡和故障转移。</p>
-            </div>
-            <div class="feature-card">
-                <h3>⚖️ 负载均衡</h3>
-                <p>支持轮询和最少连接两种负载均衡策略。</p>
-            </div>
-            <div class="feature-card">
-                <h3>📦 Gzip 压缩</h3>
-                <p>支持响应内容压缩，减少传输带宽。</p>
-            </div>
-        </div>
-
-        <div class="architecture">
-            <h2>🏗️ 系统架构</h2>
-            <div class="arch-diagram">
-                <div class="arch-box master">
-                    <strong>Master</strong><br>
-                    <small>进程管理</small>
-                </div>
-                <span class="arch-arrow">→</span>
-                <div class="arch-box worker">
-                    <strong>Worker 1</strong><br>
-                    <small>请求处理</small>
-                </div>
-                <div class="arch-box worker">
-                    <strong>Worker 2</strong><br>
-                    <small>请求处理</small>
-                </div>
-                <div class="arch-box worker">
-                    <strong>Worker N</strong><br>
-                    <small>请求处理</small>
-                </div>
-            </div>
-        </div>
-
-        <h2 style="text-align: center; margin-bottom: 30px; color: #00d4ff;">📦 核心模块</h2>
-        <div class="modules">
-            <div class="module-item">
-                <div class="icon">⚙️</div>
-                <h4>Core</h4>
-                <p>进程管理与生命周期</p>
-            </div>
-            <div class="module-item">
-                <div class="icon">📝</div>
-                <h4>Config</h4>
-                <p>配置解析系统</p>
-            </div>
-            <div class="module-item">
-                <div class="icon">🌐</div>
-                <h4>HTTP</h4>
-                <p>HTTP服务器与路由</p>
-            </div>
-            <div class="module-item">
-                <div class="icon">📄</div>
-                <h4>Handler</h4>
-                <p>静态文件与代理</p>
-            </div>
-            <div class="module-item">
-                <div class="icon">⚖️</div>
-                <h4>Upstream</h4>
-                <p>负载均衡</p>
-            </div>
-            <div class="module-item">
-                <div class="icon">📋</div>
-                <h4>Log</h4>
-                <p>日志系统</p>
-            </div>
-            <div class="module-item">
+        
+        <div class="grid">
+            <div class="card">
                 <div class="icon">⚡</div>
-                <h4>Event</h4>
-                <p>事件循环(epoll)</p>
+                <h3>高性能</h3>
+                <p>基于 Go 语言的并发模型，原生支持高并发连接，继承 Nginx 的事件驱动架构。</p>
             </div>
-            <div class="module-item">
-                <div class="icon">🗜️</div>
-                <h4>Filter</h4>
-                <p>Gzip压缩</p>
+            <div class="card">
+                <div class="icon">🏗️</div>
+                <h3>Master-Worker</h3>
+                <p>Master 进程负责配置管理和进程调度，Worker 进程处理实际请求，保障稳定性。</p>
+            </div>
+            <div class="card">
+                <div class="icon">📁</div>
+                <h3>静态文件服务</h3>
+                <p>支持 ETag、Last-Modified 缓存头，支持 MIME 类型自动识别，Gzip 压缩传输。</p>
+            </div>
+            <div class="card">
+                <div class="icon">🌐</div>
+                <h3>反向代理</h3>
+                <p>支持上游服务器转发，X-Real-IP、X-Forwarded-For 头传递。</p>
+            </div>
+            <div class="card">
+                <div class="icon">⚖️</div>
+                <h3>负载均衡</h3>
+                <p>支持轮询 (Round Robin) 和最少连接 (Least Connections) 两种策略。</p>
+            </div>
+            <div class="card">
+                <div class="icon">📝</div>
+                <h3>配置解析</h3>
+                <p>兼容 Nginx 配置文件格式，支持 include、嵌套作用域等特性。</p>
             </div>
         </div>
+        
+        <div class="progress-section">
+            <h2>📈 开发进度</h2>
+            <div class="progress-item">
+                <label><span>核心架构</span><span>100%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-done" style="width: 100%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>HTTP 服务器</span><span>100%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-done" style="width: 100%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>静态文件服务</span><span>100%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-done" style="width: 100%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>反向代理 & 负载均衡</span><span>100%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-done" style="width: 100%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>事件循环 (epoll)</span><span>60%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-dev" style="width: 60%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>单元测试</span><span>80%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-dev" style="width: 80%;"></div></div>
+            </div>
+            <div class="progress-item">
+                <label><span>SSL/TLS 支持</span><span>0%</span></label>
+                <div class="progress-bar"><div class="progress-fill fill-todo" style="width: 0%;"></div></div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🖥️ 快速开始</h2>
+            <div class="code-block">
+<span class="comment"># 1. 克隆项目</span>
+git clone https://github.com/nginxgo/nginxgo.git
+cd nginxgo
 
-        <div class="status">
-            <h3>✅ 项目状态: 开发中</h3>
-            <p>核心功能已完成，欢迎参与贡献！</p>
+<span class="comment"># 2. 编译</span>
+<span class="keyword">go</span> build -o nginxgo.exe ./cmd/nginxgo
+
+<span class="comment"># 3. 运行</span>
+./nginxgo.exe -c conf/nginx.conf
+
+<span class="comment"># 4. 测试</span>
+curl http://localhost:80/
+            </div>
+            <button class="demo-btn" onclick="alert('需要安装 Go 1.21+ 才能运行')">🎮 模拟启动</button>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📂 项目结构</h2>
+            <div class="file-tree">
+<span class="dir">nginxgo/</span>
+├── <span class="dir">cmd/</span>
+│   └── nginxgo/main.go        <span class="comment"># 程序入口</span>
+├── <span class="dir">pkg/</span>
+│   ├── <span class="dir">core/</span>                  <span class="comment"># 核心模块</span>
+│   ├── <span class="dir">config/</span>                <span class="comment"># 配置解析</span>
+│   ├── <span class="dir">http/</span>                 <span class="comment"># HTTP 服务器</span>
+│   │   ├── handler/           <span class="comment"># 处理器</span>
+│   │   └── filter/            <span class="comment"># 过滤器</span>
+│   ├── <span class="dir">upstream/</span>             <span class="comment"># 负载均衡</span>
+│   ├── <span class="dir">event/</span>                <span class="comment"># 事件循环</span>
+│   └── <span class="dir">log/</span>                  <span class="comment"># 日志系统</span>
+├── <span class="dir">conf/</span>
+│   └── nginx.conf             <span class="comment"># 配置文件</span>
+├── <span class="dir">html/</span>                    <span class="comment"># 静态文件</span>
+└── go.mod
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🛠️ 技术栈</h2>
+            <div class="tech-stack">
+                <span class="tech-item">Go 1.21+</span>
+                <span class="tech-item">epoll (Linux)</span>
+                <span class="tech-item">kqueue (macOS)</span>
+                <span class="tech-item">IOCP (Windows)</span>
+                <span class="tech-item">Master-Worker</span>
+                <span class="tech-item">HTTP/1.1</span>
+                <span class="tech-item">Gzip</span>
+                <span class="tech-item">WebSocket (规划中)</span>
+            </div>
         </div>
     </div>
 </body>
