@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# 构建产物
+nginxgo.exe
+*.exe
+release/
+*.md
+
+# 开发文件
+.preview.html
+test-console.html
+server.js
+api/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 日志
+logs/
+*.log
+
+# 测试
+*_test.go
+coverage.out
+
+# Go workspace
+go.work
+go.work.sum
